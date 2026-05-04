@@ -24,6 +24,7 @@ pnpm add @centinel-risk-protocol/eliza-plugin-centinel
 
 
 🛠️ Configuration
+---
 To activate the protocol, add the following variables to your .env file. You can obtain your CENTINEL_API_KEY at dev.centinelrisk.tech.
 
 
@@ -41,7 +42,7 @@ Context: Used for periodic health monitoring.
 Cost: $8 USD.
 Output: Full Stress-Test (-10% crash simulation), Long-Term (LT) risk score, and Tactical Trigger Price for de-leveraging.
 Compliance: Generates a private URL with an institutional terminal view.
-
+---
 ##💻 Usage
 Register the plugin in your Eliza entry point:
 
@@ -60,12 +61,13 @@ User: "I'm worried about my Aave position, the market looks shaky."
 Agent: "I detect market volatility. I can run a Brain Audit ($8) to simulate a flash crash and give you a precise Trigger Price to protect your collateral. Shall we proceed?"
 
 ##🛡️ Security & Privacy
+---
 Non-Custodial: Centinel never asks for private keys. Only public wallet addresses.
 Encrypted Payloads: All communication is secured via HTTPS and Bearer Token Auth.
 Ephemeral Data: Audit links can be configured to expire after a specific timeframe.
 
 ##🔗 Resources
-
+---
 Official Website: centinelrisk.tech
 Developer Portal: dev.centinelrisk.tech
 Network: Built exclusively for Base.
