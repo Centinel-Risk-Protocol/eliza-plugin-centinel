@@ -21,25 +21,28 @@ export const getPulseReportAction: Action = {
             return true;
         }
 
-        try {
-            const response = await fetch(`${runtime.getSetting("CENTINEL_WEBHOOK_URL")}`, {
-                method: 'POST',
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ wallet, tx_hash: hash, type: 'pulse' })
-            });
-            
-            const data = await response.json();
-            const p = data[0]; 
+       try {
+    const response = await fetch(`${runtime.getSetting("CENTINEL_WEBHOOK_URL")}/crp2026`, {
+    method: 'POST',
+    headers: { 
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${runtime.getSetting("CENTINEL_API_KEY")}` // <-- Añade esto
+    },
+    body: JSON.stringify({ wallet, tx_hash: hash, type: 'pulse' })
+});
+    
+    const result = await response.json();
+    const payload = result.plugin_report[0]; // Accedemos a tu estructura de n8n
 
-            const responseText = `🛡️ **CRP PULSE REPORT**
-Status: ${p.risk_engine.color_st} (${p.risk_engine.score_st})
-HF: ${p.data.health_factor} | Liq: $${p.execution.liquidation_price}
-Action Required: ${p.pulse.action_required}
-Recommendation: ${p.pulse.Action}
-Note: ${p.pulse.Compliance_note}`;
+    // Construimos la respuesta final combinando el reporte y el link de Bloomberg
+    const finalResponse = `${payload.eliza_report}\n\n📊 **Institutional Terminal View:** ${payload.access_url}`;
 
-            callback({ text: responseText, content: p });
-            return true;
+    callback({ 
+        text: finalResponse, 
+        content: payload.full_data // El agente guarda la data técnica en su memoria
+    });
+    return true;
+
         } catch (error) {
             elizaLogger.error("Error en Centinel Pulse:", error);
             callback({ text: "⚠️ Error conectando con el motor de riesgo CRP." });
