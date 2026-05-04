@@ -1,61 +1,72 @@
-import { Action, IAgentRuntime, Memory, State, HandlerCallback } from "@ai16z/eliza";
+import { Action, IAgentRuntime, Memory, State, HandlerCallback, elizaLogger } from "@ai16z/eliza";
 
 export const getBrainAuditAction: Action = {
     name: "GET_BRAIN_AUDIT",
-    similes: ["DEEP_AUDIT", "STRESS_TEST", "GET_TRIGGER_PRICE", "FULL_RISK_ANALYSIS"],
-    description: "Run an in-depth analysis with 10% and 20% crash simulations to obtain the Tactical Trigger Price.",
-    validate: async (runtime: IAgentRuntime, _message: Memory) => {
-        return !!runtime.getSetting("CENTINEL_API_KEY");
+    similes: ["BRAIN_SCAN", "STRESS_TEST", "FULL_AUDIT", "GET_TRIGGER_PRICE"],
+    description: "Análisis profundo de riesgo con simulación de shocks y precios tácticos de ejecución.",
+    validate: async (runtime: IAgentRuntime, message: Memory) => {
+        return /0x[a-fA-F0-9]{40}/.test(message.content.text);
     },
-    handler: async (runtime: IAgentRuntime, message: Memory, state: State, _options: any, callback: HandlerCallback) => {
-        const wallet = message.content.text.match(/0x[a-fA-F0-9]{40}/)?.[0];
-        
-        if (!wallet) {
-            callback({ text: "I need a wallet address to perform the Brain Audit." });
-            return false;
+    handler: async (runtime: IAgentRuntime, message: Memory, state?: State, _options?: any, callback?: HandlerCallback): Promise<boolean> => {
+        const text = message.content.text;
+        const wallet = text.match(/0x[a-fA-F0-9]{40}/)?.[0];
+        const hash = text.match(/0x[a-fA-F0-9]{64}/)?.[0];
+
+        // --- LÓGICA DE PAGO INTERNA ---
+        if (!hash) {
+            if (callback) {
+                callback({
+                    text: `⚠️ **PAYMENT_REQUIRED:** El análisis BRAIN requiere una verificación de seguridad ($8 USDC). 
+                    \nPor favor, realiza la transferencia a: \`0xTuWalletDeTesoreria\` y envíame el Hash de la transacción.`,
+                    content: { 
+                        status: "PAYMENT_REQUIRED", 
+                        amount: 8, 
+                        currency: "USDC", 
+                        address: "0xTuWalletDeTesoreria" 
+                    }
+                });
+            }
+            return true;
         }
 
-        // --- Payment logic (Conceptual) --
-
         try {
-            const response = await fetch(`${runtime.getSetting("CENTINEL_WEBHOOK_URL")}`, {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${runtime.getSetting("CENTINEL_API_KEY")}` },
-                body: JSON.stringify({ 
-                    wallet, 
-                    type: 'brain',
-                    service: 'premium_audit'
-                })
+            const response = await fetch("https://api.centinelrisk.tech/v1/eliza/plugin", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ wallet, tx_hash: hash, type: 'brain' })
             });
 
             const data = await response.json();
-            const brain = data[0];
+            const brain = data[0]; // Tu estructura de n8n
 
-            const responseText = `🧠 *Centinel BRAIN Audit* (Premium)
-    
-📊 **Risk Engine:**
-- Score LT: ${brain.risk_engine.score_lt} (${brain.risk_engine.color_lt})
-- Vulnerability Index: ${brain.stress_test.vulnerability_index}
+            const report = `🧠 **CENTINEL BRAIN REPORT**
+            
+📈 **Risk Engine (Short Term):**
+- Score ST: ${brain.risk_engine.score_st}
+- Status: ${brain.risk_engine.color_st}
 
-📉 **Stress Test Results:**
-- 10% Flash Crash: ${brain.stress_test.crash_test_10pct}
+🛡️ **Stress Test:**
+- 10% Crash: ${brain.stress_test.crash_test_10pct}
 - 20% Volatility: ${brain.stress_test.volatility_test_20pct}
+- Vulnerability: ${brain.stress_test.vulnerability_index}
 
-🎯 **Tactical Execution:**
-- **Trigger Price: $${brain.execution.trigger_price}** ⚠️
-- Liquidation Price: $${brain.execution.liquidation_price}
-- Suggested Action: ${brain.execution.order_type} ($${brain.execution.amount_usd})
+⚡ **Tactical Execution:**
+- **Trigger Price: $${brain.execution.trigger_price}**
+- Order Type: ${brain.execution.order_type}
+- Amount Suggested: $${brain.execution.amount_usd}
+- Liq Price: $${brain.execution.liquidation_price}
 
-📝 **Compliance:** ${brain.compliance_note}`;
+⚖️ **Compliance:** ${brain.compliance_note}`;
 
-            callback({ 
-                text: responseText, 
-                content: { ...brain, success: true } 
-            });
+            if (callback) {
+                callback({
+                    text: report,
+                    content: brain // Pasamos el JSON puro para que el agente pueda usar los números
+                });
+            }
             return true;
-
         } catch (error) {
-            callback({ text: "Error connecting to the Centinel brain. Please check your API key or balance." });
+            elizaLogger.error("Error en Centinel Plugin:", error);
             return false;
         }
     },
