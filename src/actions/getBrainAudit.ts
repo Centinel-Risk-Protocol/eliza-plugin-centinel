@@ -2,8 +2,8 @@ import { Action, IAgentRuntime, Memory, State, HandlerCallback, elizaLogger } fr
 
 export const getBrainAuditAction: Action = {
     name: "GET_BRAIN_AUDIT",
-    similes: ["BRAIN_SCAN", "STRESS_TEST", "FULL_AUDIT", "GET_TRIGGER_PRICE", "DEEP_RISK_ANALYSIS"],
-    description: "Deep risk analysis including market shocks, LT/ST scores, and tactical trigger prices.",
+    similes: ["BRAIN_SCAN", "STRESS_TEST", "FULL_AUDIT", "GET_TRIGGER_PRICE"],
+    description: "Deep solvency analysis. Requires sk_live or $8 verification.",
     validate: async (runtime: IAgentRuntime, message: Memory) => {
         return /0x[a-fA-F0-9]{40}/.test(message.content.text);
     },
@@ -11,17 +11,16 @@ export const getBrainAuditAction: Action = {
         const text = message.content.text;
         const wallet = text.match(/0x[a-fA-F0-9]{40}/)?.[0];
         const hash = text.match(/0x[a-fA-F0-9]{64}/)?.[0];
+        const apiKey = runtime.getSetting("CENTINEL_API_KEY") || "sk_trial_base_free_2026";
 
-        if (!hash) {
+        // Si es Trial y no hay Hash, avisamos que Brain requiere Upgrade
+        if (apiKey.startsWith("sk_trial") && !hash) {
             if (callback) {
                 callback({
-                    text: `⚠️ **PAYMENT_REQUIRED:** BRAIN analysis requires a security verification fee ($8 USDC).
-                    \nPlease transfer to: \`0xTuWalletDeTesoreria\` and provide the Transaction Hash.`,
-                    content: { 
-                        status: "PAYMENT_REQUIRED", 
-                        amount: 8, 
-                        currency: "USDC"
-                    }
+                    text: `🧠 **CENTINEL BRAIN:** Deep audit requires an upgrade. 
+                    \n1. Register at dev.centinelrisk.tech for an **sk_live** key.
+                    \n2. Or pay $8 to \`0xTuWallet\` and provide the hash for a one-time report.`,
+                    content: { status: "UPGRADE_REQUIRED" }
                 });
             }
             return true;
@@ -32,33 +31,27 @@ export const getBrainAuditAction: Action = {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${runtime.getSetting("CENTINEL_API_KEY")}`
+                    "Authorization": `Bearer ${apiKey}`
                 },
                 body: JSON.stringify({ wallet, tx_hash: hash, type: 'brain' })
             });
 
             const result = await response.json();
-            const payload = result.plugin_report[0]; // Usamos tu estructura de n8n
+            const payload = result.plugin_report[0];
 
-            const finalResponse = `${payload.eliza_report}\n\n🏛️ **Bloomberg Terminal Audit (PDF):** ${payload.access_url}\n*Expires at: ${payload.expires_at}*`;
+            const finalResponse = `${payload.eliza_report}\n\n🏛️ **Bloomberg Terminal Audit:** ${payload.access_url}`;
 
             if (callback) {
-                callback({ 
-                    text: finalResponse, 
-                    content: payload.full_data // Guardamos la data técnica completa en memoria
-                });
+                callback({ text: finalResponse, content: payload.full_data });
             }
             return true;
         } catch (error) {
-            elizaLogger.error("Centinel Brain Audit Error:", error);
-            if (callback) callback({ text: "Protocol offline. Check connection." });
+            elizaLogger.error("Centinel Brain Error:", error);
             return false;
         }
     },
-    examples: [
-        [
-            { user: "{{user1}}", content: { text: "Run a brain audit on 0x8ea6... hash 0x123..." } },
-            { user: "{{agentName}}", content: { text: "Calculating simulations and trigger prices...", action: "GET_BRAIN_AUDIT" } }
-        ]
-    ]
+    examples: [[
+        { user: "{{user1}}", content: { text: "Run a deep brain audit on 0x8ea6..." } },
+        { user: "{{agentName}}", content: { text: "Deep risk analysis requires sk_live. Checking trial limits...", action: "GET_BRAIN_AUDIT" } }
+    ]]
 };
