@@ -1,21 +1,23 @@
 import { z } from "zod";
 
-export const RiskReportSchema = z.object({
-    score: z.number().min(0).max(100),
-    status: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]),
-    tacticalTriggerPrice: z.string().optional(),
-    lastAudit: z.string(),
-    recommendation: z.string()
-
-    export interface CentinelData {
-    score_st: string;
-    color_st: string;
-    action_required: string;
-    action_suggested: string;
-    trigger_price?: string;
-    liquidation_price: string;
-    compliance_note: string;
-}
+// Para validar la respuesta de tu n8n
+export const CentinelDataSchema = z.object({
+    wallet: z.string(),
+    risk_engine: z.object({
+        score_st: z.string(),
+        color_st: z.string(),
+    }),
+    data: z.object({
+        health_factor: z.string(),
+    }),
+    execution: z.object({
+        liquidation_price: z.string(),
+    }),
+    pulse: z.object({
+        action_required: z.string(),
+        Action: z.string(),
+        Compliance_note: z.string(),
+    })
 });
 
-export type RiskReport = z.infer<typeof RiskReportSchema>;
+export type CentinelData = z.infer<typeof CentinelDataSchema>;
