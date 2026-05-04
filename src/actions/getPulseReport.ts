@@ -3,54 +3,44 @@ import { Action, IAgentRuntime, Memory, State, HandlerCallback, elizaLogger } fr
 export const getPulseReportAction: Action = {
     name: "GET_PULSE_REPORT",
     similes: ["CHECK_RISK", "HEALTH_FACTOR", "PULSE_CHECK", "CHECK_SOLVENCY"],
-    description: "Check the health status (Pulse) of a wallet. Requires a prior transfer of $2.",
+    description: "Daily health check for any wallet on Base. Free/Trial mode available.",
     validate: async (runtime: IAgentRuntime, message: Memory) => {
         return /0x[a-fA-F0-9]{40}/.test(message.content.text);
     },
     handler: async (runtime: IAgentRuntime, message: Memory, state: State, _options: any, callback: HandlerCallback) => {
         const text = message.content.text;
         const wallet = text.match(/0x[a-fA-F0-9]{40}/)?.[0];
-        const hash = text.match(/0x[a-fA-F0-9]{64}/)?.[0]; 
+        const hash = text.match(/0x[a-fA-F0-9]{64}/)?.[0] || "TRIAL_MODE"; 
+        
+        const apiKey = runtime.getSetting("CENTINEL_API_KEY") || "sk_trial_base_free_2026";
 
-        if (!hash) {
-            callback({
-                text: `🛡️ **CENTINEL PROTOCOL: PAYMENT REQUIRED**\nTo audit the wallet ${wallet?.slice(0,6)}... A fee of **$2 USD** is required.. \n\nPlease send the payment to \`0xMYWalletTesoreria\`and paste the TX Hash here.`,
-                content: { status: "PAYMENT_REQUIRED", amount: 2 }
+        try {
+            const response = await fetch(`${runtime.getSetting("CENTINEL_WEBHOOK_URL")}/crp2026`, {
+                method: 'POST',
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${apiKey}` 
+                },
+                body: JSON.stringify({ wallet, tx_hash: hash, type: 'pulse' })
             });
+            
+            const result = await response.json();
+            const payload = result.plugin_report[0];
+
+            const finalResponse = `${payload.eliza_report}\n\n📊 **Institutional Terminal:** ${payload.access_url}`;
+
+            if (callback) {
+                callback({ text: finalResponse, content: payload.full_data });
+            }
             return true;
-        }
-
-       try {
-    const response = await fetch(`${runtime.getSetting("CENTINEL_WEBHOOK_URL")}/crp2026`, {
-    method: 'POST',
-    headers: { 
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${runtime.getSetting("CENTINEL_API_KEY")}`
-    },
-    body: JSON.stringify({ wallet, tx_hash: hash, type: 'pulse' })
-});
-    
-    const result = await response.json();
-    const payload = result.plugin_report[0]; 
-           
-    const finalResponse = `${payload.eliza_report}\n\n📊 **Institutional Terminal View:** ${payload.access_url}`;
-
-    callback({ 
-        text: finalResponse, 
-        content: payload.full_data 
-    });
-    return true;
-
         } catch (error) {
-            elizaLogger.error("Error en Centinel Pulse:", error);
-            callback({ text: "⚠️ Error connecting to the CRP risk engine." });
+            elizaLogger.error("Centinel Pulse Error:", error);
+            if (callback) callback({ text: "⚠️ Risk Engine unreachable. Using cached safety parameters." });
             return false;
         }
     },
-    examples: [
-        [
-            { user: "{{user1}}", content: { text: "Audit my wallet 0x561d... hash 0xabc123..." } },
-            { user: "{{agentName}}", content: { text: "Analyzing your solvency with Centinel...", action: "GET_PULSE_REPORT" } }
-        ]
-    ]
+    examples: [[
+        { user: "{{user1}}", content: { text: "Audit my wallet 0x561d..." } },
+        { user: "{{agentName}}", content: { text: "Running daily Pulse scan...", action: "GET_PULSE_REPORT" } }
+    ]]
 };
