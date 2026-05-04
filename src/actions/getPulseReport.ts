@@ -18,10 +18,12 @@ export const getPulseReportAction: Action = {
             const data = await response.json();
             const pulse = data[0]; 
 
-            const responseText = `🛡️ *Centinel Pulse Report*
+            const responseText = `🛡️ CRP PULSE: ${pulse.risk_engine.color_st} (${pulse.risk_engine.score_st})
 Wallet: ${pulse.wallet}
 HF: ${pulse.data.health_factor} | Status: ${pulse.risk_engine.color_st}
 Liq. Price: $${pulse.execution.liquidation_price}
+Action_required: ${pulse.pulse.action_required}
+Action: ${pulse.pulse.Action}
 Note: ${pulse.pulse.Compliance_note}`;
 
             callback({ text: responseText, content: pulse });
