@@ -19,7 +19,7 @@ Standard DeFi agents follow static rules. **Centinel Agents follow market physic
 
 ## 🚀 Installation
 
-```bash
+bash
 pnpm add @centinel-risk-protocol/eliza-plugin-centinel
 
 
