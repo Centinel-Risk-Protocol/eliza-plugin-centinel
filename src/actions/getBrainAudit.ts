@@ -28,38 +28,25 @@ export const getBrainAuditAction: Action = {
         }
 
         try {
-            // Updated URL to your crp2026 route
             const response = await fetch(`${runtime.getSetting("CENTINEL_WEBHOOK_URL")}/crp2026`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${runtime.getSetting("CENTINEL_API_KEY")}`
+                },
                 body: JSON.stringify({ wallet, tx_hash: hash, type: 'brain' })
             });
 
-            const data = await response.json();
-            const b = data[0]; 
+            const result = await response.json();
+            const payload = result.plugin_report[0]; // Usamos tu estructura de n8n
 
-            const report = `🧠 **CENTINEL BRAIN AUDIT**
-            
-📊 **Solvency Metrics:**
-- HF (Health Factor): ${b.data.health_factor}
--maximum_drop_support: ${b.risk_engine.maximum_drop_support}
-- LT Score (Long-Term): ${b.risk_engine.score_lt} [${b.risk_engine.color_lt}]
-- ST Score (Short-Term): ${b.risk_engine.score_st} [${b.risk_engine.color_st}]
-
-📉 **Stress Test Simulations:**
-- 10% Flash Crash: ${b.stress_test.crash_test_10pct}
-- 20% Volatility: ${b.stress_test.volatility_test_20pct}
-- Vulnerability Index: ${b.stress_test.vulnerability_index}
-
-⚡ **Tactical Execution:**
-- **Trigger Price: $${b.execution.trigger_price}** ⚠️
-- Liq. Price: $${b.execution.liquidation_price}
-- Order: ${b.execution.order_type} ($${b.execution.amount_usd})
-
-⚖️ **Compliance:** ${b.compliance_note}`;
+            const finalResponse = `${payload.eliza_report}\n\n🏛️ **Bloomberg Terminal Audit (PDF):** ${payload.access_url}\n*Expires at: ${payload.expires_at}*`;
 
             if (callback) {
-                callback({ text: report, content: b });
+                callback({ 
+                    text: finalResponse, 
+                    content: payload.full_data // Guardamos la data técnica completa en memoria
+                });
             }
             return true;
         } catch (error) {
