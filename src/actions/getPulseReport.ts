@@ -1,39 +1,55 @@
-import { Action, IAgentRuntime, Memory, State, HandlerCallback } from "@ai16z/eliza";
+import { Action, IAgentRuntime, Memory, State, HandlerCallback, elizaLogger } from "@ai16z/eliza";
 
 export const getPulseReportAction: Action = {
     name: "GET_PULSE_REPORT",
     similes: ["CHECK_RISK", "HEALTH_FACTOR", "PULSE_CHECK", "CHECK_SOLVENCY"],
-    description: "Get a quick (Pulse) report on the financial health and risk of a wallet in Base.",
+    description: "Consulta el estado de salud (Pulse) de una wallet. Requiere transferencia previa de $2.",
     validate: async (runtime: IAgentRuntime, message: Memory) => {
-        return !!message.content.text?.includes("0x");
+        return /0x[a-fA-F0-9]{40}/.test(message.content.text);
     },
     handler: async (runtime: IAgentRuntime, message: Memory, state: State, _options: any, callback: HandlerCallback) => {
-        const wallet = message.content.text.match(/0x[a-fA-F0-9]{40}/)?.[0];
-        
+        const text = message.content.text;
+        const wallet = text.match(/0x[a-fA-F0-9]{40}/)?.[0];
+        const hash = text.match(/0x[a-fA-F0-9]{64}/)?.[0]; // Buscamos el Hash de pago
+
+        // BLOQUEO DE SEGURIDAD: Si no hay hash, pedimos el pago
+        if (!hash) {
+            callback({
+                text: `🛡️ **CENTINEL PROTOCOL: PAGO REQUERIDO**\nPara auditar la wallet ${wallet?.slice(0,6)}... se requiere un fee de **$2 USD**. \n\nPor favor, envía el pago a \`0xTuWalletTesoreria\` y pega el TX Hash aquí.`,
+                content: { status: "PAYMENT_REQUIRED", amount: 2 }
+            });
+            return true;
+        }
+
         try {
             const response = await fetch(`${runtime.getSetting("CENTINEL_WEBHOOK_URL")}`, {
                 method: 'POST',
-                body: JSON.stringify({ wallet, type: 'pulse' })
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ wallet, tx_hash: hash, type: 'pulse' })
             });
+            
             const data = await response.json();
-            const pulse = data[0]; 
+            const p = data[0]; 
 
-            const responseText = `🛡️ CRP PULSE: ${pulse.risk_engine.color_st} (${pulse.risk_engine.score_st})
-Wallet: ${pulse.wallet}
-HF: ${pulse.data.health_factor} | Status: ${pulse.risk_engine.color_st}
-Liq. Price: $${pulse.execution.liquidation_price}
-Action_required: ${pulse.pulse.action_required}
-Action: ${pulse.pulse.Action}
-Note: ${pulse.pulse.Compliance_note}`;
+            const responseText = `🛡️ **CRP PULSE REPORT**
+Status: ${p.risk_engine.color_st} (${p.risk_engine.score_st})
+HF: ${p.data.health_factor} | Liq: $${p.execution.liquidation_price}
+Action Required: ${p.pulse.action_required}
+Recommendation: ${p.pulse.Action}
+Note: ${p.pulse.Compliance_note}`;
 
-            callback({ text: responseText, content: pulse });
+            callback({ text: responseText, content: p });
             return true;
         } catch (error) {
-            callback({ text: "Sorry, I couldn't connect to the Centinel risk engine." });
+            elizaLogger.error("Error en Centinel Pulse:", error);
+            callback({ text: "⚠️ Error conectando con el motor de riesgo CRP." });
             return false;
         }
     },
     examples: [
-        [{ user: "{{user1}}", content: { text: "Check my pulse 0x561d..." } }, { user: "{{agentName}}", content: { text: "Checking your solvency on Base...", action: "GET_PULSE_REPORT" } }]
+        [
+            { user: "{{user1}}", content: { text: "Audit my wallet 0x561d... hash 0xabc123..." } },
+            { user: "{{agentName}}", content: { text: "Analyzing your solvency with Centinel...", action: "GET_PULSE_REPORT" } }
+        ]
     ]
 };
