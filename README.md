@@ -1,30 +1,34 @@
-🛡️ @centinel-risk/plugin-eliza
-The Solvency Layer for Autonomous Agents on Base Network. Providing real-time audits, dynamic Risk Scores, and Tactical Trigger Prices.
+# 🛡️ @centinel-risk-protocol/eliza-plugin-centinel
 
-Prevent your agent from unexpected liquidations. Centinel is a high-fidelity risk engine that provides real-time solvency auditing, stress-test simulations, and tactical execution triggers for the Agentic Economy.
+> **The "Safety Switch" for Autonomous Agents on Base Network.**
 
-🧠 Why Centinel?
-Static rules aren't enough for volatile markets. Centinel Agents follow market physics.
+Prevent your agent from going to zero. Integrate the **Centinel Risk Protocol (CRP)**: a high-fidelity risk oracle that provides real-time solvency auditing, solvency simulations, and tactical liquidation triggers for the A2A (Agent-to-Agent) economy.
 
-Pulse Audit: Real-time Health Factor (HF) monitoring and solvency scoring.
+---
 
-Brain Audit: Deep-risk simulations (Flash Crashes) and Tactical Trigger Prices.
+## 🧠 Why your Agent needs this
 
-Bloomberg-Style Reports: Institutional-grade reports for compliance and auditing.
+Standard DeFi agents follow static rules. **Centinel Agents follow market physics.**
 
-Safety Switch: Automated alerts before the market hits your liquidation price.
+*   **Adaptive Health Factor:** Real-time monitoring of borrowing positions.
+*   **Tactical Trigger Price:** Know the exact price point where your agent must de-leverage before it's too late.
+*   **Stress-Test Simulations:** Real-time impact analysis of -10% flash crashes and -20% volatility shocks.
+*   **Institutional Reports:** Bloomberg-style terminal reports (PDF) for compliance and auditing.
 
-🚀 Installation
-npm install @centinel-risk/plugin-eliza
-# or
-pnpm add @centinel-risk/plugin-eliza
+---
+
+## 🚀 Installation
+
+```bash
+pnpm add @centinel-risk-protocol/eliza-plugin-centinel
+
 
 🛠️ Configuration
-To activate the plugin, add your credentials to the agent's .env file. Get your API Key at dev.centinelrisk.tech.
+To activate the protocol, add the following variables to your .env file. You can obtain your CENTINEL_API_KEY at dev.centinelrisk.tech.
 
-# Centinel Protocol Settings
+
 CENTINEL_API_KEY=cent_pending
-CENTINEL_WEBHOOK_URL=https://api.centinelrisk.tech/v1/el..
+CENTINEL_WEBHOOK_URL=https://api.centinelrisk.tech/v..
 
 📦 Core Actions
 
