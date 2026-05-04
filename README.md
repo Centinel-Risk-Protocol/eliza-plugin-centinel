@@ -42,8 +42,9 @@ Context: Used for periodic health monitoring.
 Cost: $8 USD.
 Output: Full Stress-Test (-10% crash simulation), Long-Term (LT) risk score, and Tactical Trigger Price for de-leveraging.
 Compliance: Generates a private URL with an institutional terminal view.
----
+
 ##💻 Usage
+---
 Register the plugin in your Eliza entry point:
 
 TypeScript
