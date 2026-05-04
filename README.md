@@ -6,7 +6,7 @@ Prevent your agent from going to zero. Integrate the **Centinel Risk Protocol (C
 
 ---
 
-## 🧠 Why your Agent needs this
+🧠 Why your Agent needs this
 
 Standard DeFi agents follow static rules. **Centinel Agents follow market physics.**
 
@@ -15,9 +15,9 @@ Standard DeFi agents follow static rules. **Centinel Agents follow market physic
 *   **Stress-Test Simulations:** Real-time impact analysis of -10% flash crashes and -20% volatility shocks.
 *   **Institutional Reports:** Bloomberg-style terminal reports (PDF) for compliance and auditing.
 
----
 
-## 🚀 Installation
+ 🚀 Installation
+ ---
 
 bash
 pnpm add @centinel-risk-protocol/eliza-plugin-centinel
@@ -43,7 +43,7 @@ Cost: $8 USD.
 Output: Full Stress-Test (-10% crash simulation), Long-Term (LT) risk score, and Tactical Trigger Price for de-leveraging.
 Compliance: Generates a private URL with an institutional terminal view.
 
-##💻 Usage
+💻 Usage
 ---
 Register the plugin in your Eliza entry point:
 
@@ -61,13 +61,13 @@ User: "I'm worried about my Aave position, the market looks shaky."
 
 Agent: "I detect market volatility. I can run a Brain Audit ($8) to simulate a flash crash and give you a precise Trigger Price to protect your collateral. Shall we proceed?"
 
-##🛡️ Security & Privacy
+🛡️ Security & Privacy
 ---
 Non-Custodial: Centinel never asks for private keys. Only public wallet addresses.
 Encrypted Payloads: All communication is secured via HTTPS and Bearer Token Auth.
 Ephemeral Data: Audit links can be configured to expire after a specific timeframe.
 
-##🔗 Resources
+🔗 Resources
 ---
 Official Website: centinelrisk.tech
 Developer Portal: dev.centinelrisk.tech
