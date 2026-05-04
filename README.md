@@ -1,12 +1,13 @@
 # 🛡️ @centinel-risk-protocol/eliza-plugin-centinel
+---
 
 > **The "Safety Switch" for Autonomous Agents on Base Network.**
 
 Prevent your agent from going to zero. Integrate the **Centinel Risk Protocol (CRP)**: a high-fidelity risk oracle that provides real-time solvency auditing, solvency simulations, and tactical liquidation triggers for the A2A (Agent-to-Agent) economy.
 
----
 
 🧠 Why your Agent needs this
+---
 
 Standard DeFi agents follow static rules. **Centinel Agents follow market physics.**
 
@@ -33,12 +34,12 @@ CENTINEL_WEBHOOK_URL=https://api.centinelrisk.tech/v..
 
 📦 Core Actions
 
-1. GET_PULSE_REPORT (Routine Check)
+1.🛡️ GET_PULSE_REPORT (Routine Check)
 Cost: 1 Free/day or $2 USD.
 Output: Immediate solvency score, HF check, and maintenance recommendations.
 Context: Used for periodic health monitoring.
 
-2. GET_BRAIN_AUDIT (Strategic Deep-Dive)
+2. 🧠 GET_BRAIN_AUDIT (Strategic Deep-Dive)
 Cost: $8 USD.
 Output: Full Stress-Test (-10% crash simulation), Long-Term (LT) risk score, and Tactical Trigger Price for de-leveraging.
 Compliance: Generates a private URL with an institutional terminal view.
@@ -58,7 +59,6 @@ The "Sales Engine" in Action
 The plugin includes a built-in RiskEvaluator that detects user anxiety or high-leverage scenarios to proactively suggest audits.
 
 User: "I'm worried about my Aave position, the market looks shaky."
-
 Agent: "I detect market volatility. I can run a Brain Audit ($8) to simulate a flash crash and give you a precise Trigger Price to protect your collateral. Shall we proceed?"
 
 🛡️ Security & Privacy
