@@ -13,7 +13,6 @@ export const getBrainAuditAction: Action = {
         const hash = text.match(/0x[a-fA-F0-9]{64}/)?.[0] || "NO_HASH";
         const apiKey = runtime.getSetting("CENTINEL_API_KEY") || "sk_trial_base_free_2026";
 
-        // --- 1. COOLDOWN DE SEGURIDAD (60s para simulaciones Brain) ---
         const cacheKey = `last_brain_${wallet}`;
         const lastCall = await runtime.cacheManager.get<number>(cacheKey);
         const NOW = Date.now();
@@ -22,7 +21,6 @@ export const getBrainAuditAction: Action = {
             return true;
         }
 
-        // --- 2. TRIAL GATE ---
         if (apiKey.startsWith("sk_trial") && hash === "NO_HASH") {
             if (callback) {
                 callback({
@@ -47,7 +45,6 @@ export const getBrainAuditAction: Action = {
 
             const result = await response.json();
 
-            // Manejo de respuesta de bloqueo de n8n
             if (result.access_granted === false) {
                 if (callback) callback({ text: `🚫 **CENTINEL ERROR:** ${result.error_message}` });
                 return true;
