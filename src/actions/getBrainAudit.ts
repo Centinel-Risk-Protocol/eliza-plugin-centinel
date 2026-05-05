@@ -10,16 +10,25 @@ export const getBrainAuditAction: Action = {
     handler: async (runtime: IAgentRuntime, message: Memory, state?: State, _options?: any, callback?: HandlerCallback): Promise<boolean> => {
         const text = message.content.text;
         const wallet = text.match(/0x[a-fA-F0-9]{40}/)?.[0];
-        const hash = text.match(/0x[a-fA-F0-9]{64}/)?.[0];
+        const hash = text.match(/0x[a-fA-F0-9]{64}/)?.[0] || "NO_HASH";
         const apiKey = runtime.getSetting("CENTINEL_API_KEY") || "sk_trial_base_free_2026";
 
-        // Si es Trial y no hay Hash, avisamos que Brain requiere Upgrade
-        if (apiKey.startsWith("sk_trial") && !hash) {
+        // --- 1. COOLDOWN DE SEGURIDAD (60s para simulaciones Brain) ---
+        const cacheKey = `last_brain_${wallet}`;
+        const lastCall = await runtime.cacheManager.get<number>(cacheKey);
+        const NOW = Date.now();
+        if (lastCall && (NOW - lastCall) < 60000) {
+            if (callback) callback({ text: "🧠 Brain Engine is recalibrating. Please wait 60s between deep audits." });
+            return true;
+        }
+
+        // --- 2. TRIAL GATE ---
+        if (apiKey.startsWith("sk_trial") && hash === "NO_HASH") {
             if (callback) {
                 callback({
-                    text: `🧠 **CENTINEL BRAIN:** Deep audit requires an upgrade. 
-                    \n1. Register at dev.centinelrisk.tech for an **sk_live** key.
-                    \n2. Or pay $8 to \`0xTuWallet\` and provide the hash for a one-time report.`,
+                    text: `🧠 **BRAIN UPGRADE REQUIRED:** Deep audit requires an sk_live key.
+                    \n1. Get yours at dev.centinelrisk.tech
+                    \n2. Or provide a $8 Tx Hash for a single report.`,
                     content: { status: "UPGRADE_REQUIRED" }
                 });
             }
@@ -37,9 +46,17 @@ export const getBrainAuditAction: Action = {
             });
 
             const result = await response.json();
-            const payload = result.plugin_report[0];
 
+            // Manejo de respuesta de bloqueo de n8n
+            if (result.access_granted === false) {
+                if (callback) callback({ text: `🚫 **CENTINEL ERROR:** ${result.error_message}` });
+                return true;
+            }
+
+            const payload = result.plugin_report[0];
             const finalResponse = `${payload.eliza_report}\n\n🏛️ **Bloomberg Terminal Audit:** ${payload.access_url}`;
+
+            await runtime.cacheManager.set(cacheKey, NOW);
 
             if (callback) {
                 callback({ text: finalResponse, content: payload.full_data });
@@ -47,11 +64,12 @@ export const getBrainAuditAction: Action = {
             return true;
         } catch (error) {
             elizaLogger.error("Centinel Brain Error:", error);
+            if (callback) callback({ text: "⚠️ Simulation engine offline. Try again later." });
             return false;
         }
     },
     examples: [[
         { user: "{{user1}}", content: { text: "Run a deep brain audit on 0x8ea6..." } },
-        { user: "{{agentName}}", content: { text: "Deep risk analysis requires sk_live. Checking trial limits...", action: "GET_BRAIN_AUDIT" } }
+        { user: "{{agentName}}", content: { text: "Simulating market shocks and trigger prices...", action: "GET_BRAIN_AUDIT" } }
     ]]
 };
