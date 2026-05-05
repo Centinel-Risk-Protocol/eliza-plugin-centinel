@@ -5,15 +5,15 @@ import { riskEvaluator } from "./evaluators/riskEvaluator";
 
 export const centinelPlugin: Plugin = {
     name: "centinel-risk-protocol",
-    description: "Centinel Risk Intelligence & Solvency Layer for Base Network. Real-time audits and tactical trigger prices.",
+    description: "Centinel Risk Intelligence & Solvency Layer for Base Network.",
     actions: [
         getPulseReportAction, 
         getBrainAuditAction
     ],
-    providers: [],
     evaluators: [
         riskEvaluator
     ],
+    providers: []
 };
 
 export default centinelPlugin;
