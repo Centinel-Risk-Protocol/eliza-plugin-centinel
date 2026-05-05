@@ -1,24 +1,17 @@
-import { IAgentRuntime, Memory, Provider, State } from "@ai16z/eliza";
+import { IAgentRuntime, Memory, Provider, State, elizaLogger } from "@ai16z/eliza";
 
 export const centinelRiskProvider: Provider = {
     get: async (runtime: IAgentRuntime, message: Memory, _state?: State) => {
         try {
-            // Aquí iría la lógica para extraer el contrato del mensaje
-            // O consultar el estado actual del mercado
-            const apiUrl = "https://centinelrisk.tech/api/v1/report"; 
-            
-            
-            // const response = await fetch(`${apiUrl}?id=...`);
-            // const data = await response.json();
+            const apiKey = runtime.getSetting("CENTINEL_API_KEY");
+            if (!apiKey) return null;
 
-            return `[CENTINEL RISK REPORT]
-Status: Secure
-Risk Score: 5/10
-Tactical Trigger Price: $80201.42
-Recommendation: Optimal for Base Network operations.`;
+            return `[PROTOCOL_CONTEXT: Centinel Risk is ACTIVE on Base Network. 
+            Current Mode: Institutional Monitoring. 
+            Requirement: Brain Audits require sk_live or $8 hash.]`;
         } catch (error) {
-            console.error("Error en Centinel Provider:", error);
-            return "Risk data currently unavailable.";
+            elizaLogger.error("Error en Centinel Provider:", error);
+            return null;
         }
     },
 };
