@@ -14,7 +14,6 @@ export const getPulseReportAction: Action = {
         
         const apiKey = runtime.getSetting("CENTINEL_API_KEY") || "sk_trial_base_free_2026";
 
-        // --- 1. COOLDOWN INTERNO (Anti-Spam del Agente) ---
         const cacheKey = `last_pulse_${wallet}`;
         const lastCall = await runtime.cacheManager.get<number>(cacheKey);
         const NOW = Date.now();
@@ -35,7 +34,6 @@ export const getPulseReportAction: Action = {
 
             const result = await response.json();
 
-            // --- 2. MANEJO DE BLOQUEO (Si n8n dice que NO) ---
             if (result.access_granted === false) {
                 if (callback) callback({ text: `🚫 **ACCESS DENIED:** ${result.error_message}` });
                 return true;
@@ -44,7 +42,6 @@ export const getPulseReportAction: Action = {
             const payload = result.plugin_report[0];
             const finalResponse = `${payload.eliza_report}\n\n📊 **Institutional Terminal:** ${payload.access_url}`;
 
-            // Guardamos en caché el éxito para el cooldown
             await runtime.cacheManager.set(cacheKey, NOW);
 
             if (callback) {
