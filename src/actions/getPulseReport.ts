@@ -10,9 +10,18 @@ export const getPulseReportAction: Action = {
     handler: async (runtime: IAgentRuntime, message: Memory, state: State, _options: any, callback: HandlerCallback) => {
         const text = message.content.text;
         const wallet = text.match(/0x[a-fA-F0-9]{40}/)?.[0];
-        const hash = text.match(/0x[a-fA-F0-9]{64}/)?.[0] || "TRIAL_MODE"; 
+        const hash = text.match(/0x[a-fA-F0-9]{64}/)?.[0] || "NO_HASH"; 
         
         const apiKey = runtime.getSetting("CENTINEL_API_KEY") || "sk_trial_base_free_2026";
+
+        // --- 1. COOLDOWN INTERNO (Anti-Spam del Agente) ---
+        const cacheKey = `last_pulse_${wallet}`;
+        const lastCall = await runtime.cacheManager.get<number>(cacheKey);
+        const NOW = Date.now();
+        if (lastCall && (NOW - lastCall) < 30000) { // 30 segundos de respiro
+            if (callback) callback({ text: "🛡️ Protocol is stabilizing. Please wait 30s between scans." });
+            return true;
+        }
 
         try {
             const response = await fetch(`${runtime.getSetting("CENTINEL_WEBHOOK_URL")}/crp2026`, {
@@ -23,24 +32,34 @@ export const getPulseReportAction: Action = {
                 },
                 body: JSON.stringify({ wallet, tx_hash: hash, type: 'pulse' })
             });
-            
-            const result = await response.json();
-            const payload = result.plugin_report[0];
 
+            const result = await response.json();
+
+            // --- 2. MANEJO DE BLOQUEO (Si n8n dice que NO) ---
+            if (result.access_granted === false) {
+                if (callback) callback({ text: `🚫 **ACCESS DENIED:** ${result.error_message}` });
+                return true;
+            }
+
+            const payload = result.plugin_report[0];
             const finalResponse = `${payload.eliza_report}\n\n📊 **Institutional Terminal:** ${payload.access_url}`;
+
+            // Guardamos en caché el éxito para el cooldown
+            await runtime.cacheManager.set(cacheKey, NOW);
 
             if (callback) {
                 callback({ text: finalResponse, content: payload.full_data });
             }
             return true;
+
         } catch (error) {
             elizaLogger.error("Centinel Pulse Error:", error);
-            if (callback) callback({ text: "⚠️ Risk Engine unreachable. Using cached safety parameters." });
+            if (callback) callback({ text: "⚠️ Risk Engine busy. Try again in a few minutes." });
             return false;
         }
     },
     examples: [[
-        { user: "{{user1}}", content: { text: "Audit my wallet 0x561d..." } },
-        { user: "{{agentName}}", content: { text: "Running daily Pulse scan...", action: "GET_PULSE_REPORT" } }
+        { user: "{{user1}}", content: { text: "Audit 0x561d..." } },
+        { user: "{{agentName}}", content: { text: "Scanning solvency parameters...", action: "GET_PULSE_REPORT" } }
     ]]
 };
