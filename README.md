@@ -82,6 +82,22 @@ Cost: $8 USD.
 Output: Full Stress-Test (-10% crash simulation), Long-Term (LT) risk score, and Tactical Trigger Price for de-leveraging.
 Compliance: Generates a private URL with an institutional terminal view.
 
+{
+  "audit_id": "AUD-Brain-548092",
+  "simulations": {
+    "crash_test_10pct": "HF Post-Crash: 2.99 | Impact: Low",
+    "volatility_test_20pct": "Score Proj: 1.57 | Impact: Low",
+    "vulnerability_index": "LOW (0.00%)"
+  },
+  "tactical_intel": {
+    "trigger_price": "30195.92",
+    "liquidation_price": "24484.27",
+    "order_justification": "Consolidation phase. Under-allocation risk."
+  },
+  "score_lt": "1.91",
+  "zone": "GREEN (Growth Zone)"
+}
+
 💻 Usage
 ---
 Register the plugin in your Eliza entry point:
