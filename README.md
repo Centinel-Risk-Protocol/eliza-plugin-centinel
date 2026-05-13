@@ -40,7 +40,8 @@ Output: Immediate solvency score, HF check, and maintenance recommendations.
 Context: Used for periodic health monitoring.
 Compliance: Generates a private URL with an institutional terminal view.
  JSON
- [
+
+ 
   {
     "status": "SUCCESS",
     "eliza_report": "🛡️ [CENTINEL PULSE CHECK]\nscore_st: 3.86 [YELLOW (Optimal Peak)] \nhealth_factor: 1.7644 |\naction_required: Yes \nrecommendation: MONITOR_CYCLE_24H.\ncompliance_note: [Vulnerability:NO], [Volatility_risk:No], [Safe Operating Solvency]\naccess_url: https://centinelrisk.tech/report?id=....0",
@@ -75,7 +76,7 @@ Compliance: Generates a private URL with an institutional terminal view.
       "is_active": true
     }
   }
-]
+
 
 2. 🧠 GET_BRAIN_AUDIT (Strategic Deep-Dive)
 Cost: $8 USD.
