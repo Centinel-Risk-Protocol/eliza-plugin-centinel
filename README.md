@@ -194,7 +194,13 @@ Add it to your environment variables.
 
 ⚙️ Final Configuration Check
 Ensure your .env follows this structure to enable all features:
-# Mandatory for Brain Audits (Deep-Dive)
+
+ 
+ <details>
+<summary><b>Mandatory for Brain Audits (Deep-Dive)</b></summary>
+  
+  ```
+# 
 CENTINEL_API_KEY=cent_live_your_unique_key
 
 # Default endpoints (Managed by Centinel Protocol)
