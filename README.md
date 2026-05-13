@@ -162,4 +162,4 @@ Ephemeral Data: Audit links can be configured to expire after a specific timefra
 ---
 * Official Website: centinelrisk.tech
 * Developer Portal: dev.centinelrisk.tech
-* Network: Built exclusively for Base.
+* Network: Built exclusively for Base/AAVE.
