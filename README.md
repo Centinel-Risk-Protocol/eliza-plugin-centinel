@@ -163,3 +163,43 @@ Ephemeral Data: Audit links can be configured to expire after a specific timefra
 * Official Website: centinelrisk.tech
 * Developer Portal: dev.centinelrisk.tech
 * Network: Built exclusively for Base/AAVE.
+
+
+🛡️ Architecture & Security Model
+---
+The Centinel Risk Plugin operates under a dual-layer infrastructure designed for high availability and DDoS protection.
+
+1. Dual-Path Processing
+The plugin automatically routes requests through two different security corridors depending on the audit depth:
+
+Pulse Corridor (Free & Public): Uses a pre-configured public API Key embedded in the plugin. No manual setup required for basic health checks. Protected by Cloudflare Rate Limiting (Aggressive IP-based shielding).
+
+Brain Corridor (Premium & Deep-Dive): Requires a personal CENTINEL_API_KEY. This path allows for high-throughput requests and deep market simulations.
+
+2. Authentication & Access
+Feature,Pulse Audit,Brain Audit
+Setup,Automatic (Zero-Config),Manual (.env required)
+Auth Method,Public Bearer Token,Private Bearer Token
+Verification,Global Rate Limit,Real-time API Key Validation
+Provider,Centinel Public Node,Centinel Premium Oracle
+
+3. How to obtain a Brain API Key
+To access deep audits, stress-tests, and tactical trigger prices, you must register your agent:
+
+Visit the Centinel Developer Portal. https://dev.centinelrisk.tech/
+
+Generate your unique CENTINEL_API_KEY.
+
+Add it to your environment variables.
+
+⚙️ Final Configuration Check
+Ensure your .env follows this structure to enable all features:
+# Mandatory for Brain Audits (Deep-Dive)
+CENTINEL_API_KEY=cent_live_your_unique_key
+
+# Default endpoints (Managed by Centinel Protocol)
+CENTINEL_PULSE_URL=https://api.centinelrisk.tech/v1/pulse
+CENTINEL_BRAIN_URL=https://api.centinelrisk.tech/v1/brain
+
+Security Note: Centinel never interacts with private keys. We only require public wallet addresses or transaction hashes to perform off-chain risk simulations.
+
