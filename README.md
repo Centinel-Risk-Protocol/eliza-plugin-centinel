@@ -43,6 +43,7 @@ Compliance: Generates a private URL with an institutional terminal view.
 
  <details>
 <summary><b>Click  for all JSON details in GET_PULSE_REPORT</b></summary>
+  
   ```json
   {
     
@@ -75,7 +76,9 @@ Compliance: Generates a private URL with an institutional terminal view.
       "expires_at": "2026-05-14T00:24:19.650Z"
     }
   }
+```
 
+</details>
 
 2. 🧠 GET_BRAIN_AUDIT (Strategic Deep-Dive)
 Cost: $8 USD.
