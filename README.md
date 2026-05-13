@@ -34,13 +34,10 @@ CENTINEL_WEBHOOK_URL=https://api.centinelrisk.tech/v..
 📦 Core Actions
 
 1.🛡️ GET_PULSE_REPORT (Routine Check)
-Cost: 1 Free/day or $2 USD.
-Output: Immediate solvency score, HF check, and maintenance recommendations.
-Context: Used for periodic health monitoring.
-Compliance: Generates a private URL with an institutional terminal view.
+*  Cost: One Free/day or $2 USD.
+*  Output: Immediate solvency score, Health Factor (HF) check, and maintenance recommendations.
+*  Security Note: Generates a private URL with an institutional terminal view. The access_url is ephemeral and expires in 24h.
  
- JSON *The access_url is ephemeral and expires in 24h for security."
-
  <details>
 <summary><b>Click  for all JSON details in GET_PULSE_REPORT</b></summary>
   
@@ -81,9 +78,9 @@ Compliance: Generates a private URL with an institutional terminal view.
 </details>
 
 2. 🧠 GET_BRAIN_AUDIT (Strategic Deep-Dive)
-Cost: $8 USD.
-Output: Full Stress-Test (-10% crash simulation), Long-Term (LT) risk score, and Tactical Trigger Price for de-leveraging.
-Compliance: Generates a private URL with an institutional terminal view.
+* Cost: $8 USD.
+* Output: Full Stress-Test (-10% crash simulation), Long-Term (LT) risk score, and Tactical Trigger Price for de-leveraging.
+* Compliance: Generates a private URL with an institutional terminal view.
 
 Strategic for automated de-leveraging Agents. Use 'trigger_price' to set safety stops.
 
@@ -126,6 +123,17 @@ Strategic for automated de-leveraging Agents. Use 'trigger_price' to set safety 
 ```
 
 </details>
+
+🕹️ How to Trigger (Usage Instructions)
+---
+To ensure the Agent correctly identifies the requested audit type, users should follow these patterns:
+* For Pulse (Free/Routine):
+Must include the word "Pulse" + the Wallet Address (0x...).
+Example: "Can you run a pulse check on 0x123...?"
+
+* For Brain (Premium/Deep-Dive):
+ Must include the Wallet addresss and Transaction Hash (64 characters).
+Example: "Run an audit on 0x0...754 and hash 0x30....bf23"
 
 💻 Usage
 ---
