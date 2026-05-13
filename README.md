@@ -3,7 +3,7 @@
 
 > **The "Safety Switch" for Autonomous Agents on Base Network.**
 
-Prevent your agent from going to zero. Integrate the **Centinel Risk Protocol (CRP)**: a high-fidelity risk oracle that provides real-time solvency auditing, solvency simulations, and tactical liquidation triggers for the A2A (Agent-to-Agent) economy.
+Prevent your agent from going to zero. Integrate the **Centinel Risk Protocol (CRP)**: a high-fidelity risk oracle that provides real-time solvency auditing, solvency simulations(Stress-Test), and tactical liquidation triggers (Dynamic Risk Threshold) for the A2A (Agent-to-Agent) economy.
 
 
 🧠 Why your Agent needs this
