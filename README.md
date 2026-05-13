@@ -38,6 +38,7 @@ CENTINEL_WEBHOOK_URL=https://api.centinelrisk.tech/v..
 Cost: 1 Free/day or $2 USD.
 Output: Immediate solvency score, HF check, and maintenance recommendations.
 Context: Used for periodic health monitoring.
+Compliance: Generates a private URL with an institutional terminal view.
 
 2. 🧠 GET_BRAIN_AUDIT (Strategic Deep-Dive)
 Cost: $8 USD.
