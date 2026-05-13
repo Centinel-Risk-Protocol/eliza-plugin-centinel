@@ -70,7 +70,7 @@ Compliance: Generates a private URL with an institutional terminal view.
         "Action": "MONITOR_CYCLE_24H.",
         "Compliance_note": "[Vulnerability:NO], [Volatility_risk:No], [Safe Operating Solvency]"
       },
-      "access_url": "https://centinelrisk.tech/report?id=28bd2...-3017-4..-a8d5-3ab....cd960",
+      "access_url": "https://centinelrisk.tech/report?id=28...960",
       "UUID": "28bd2.....60",
       "expires_at": "2026-05-14T00:24:19.650Z",
       "is_active": true
