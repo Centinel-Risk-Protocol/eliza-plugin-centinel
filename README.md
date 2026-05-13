@@ -39,6 +39,43 @@ Cost: 1 Free/day or $2 USD.
 Output: Immediate solvency score, HF check, and maintenance recommendations.
 Context: Used for periodic health monitoring.
 Compliance: Generates a private URL with an institutional terminal view.
+ JSON
+ [
+  {
+    "status": "SUCCESS",
+    "eliza_report": "🛡️ [CENTINEL PULSE CHECK]\nscore_st: 3.86 [YELLOW (Optimal Peak)] \nhealth_factor: 1.7644 |\naction_required: Yes \nrecommendation: MONITOR_CYCLE_24H.\ncompliance_note: [Vulnerability:NO], [Volatility_risk:No], [Safe Operating Solvency]\naccess_url: https://centinelrisk.tech/report?id=....0",
+    "full_data": {
+      "audit_id": "AUD-Pulse-324995",
+      "timestamp": "2026-05-13T00:24:19.627Z",
+      "plan": "Pulse",
+      "status": "SUCCESS",
+      "wallet": "0x0d...34",
+      "transaction_hash": "FREE_TRIAL",
+      "system_status": "Operational",
+      "data": {
+        "health_factor": "1.7644",
+        "equity": "10009.09",
+        "btc_price": 80571
+      },
+      "risk_engine": {
+        "score_st": "3.86",
+        "color_st": "YELLOW (Optimal Peak)"
+      },
+      "execution": {
+        "liquidation_price": "45664.82"
+      },
+      "pulse": {
+        "action_required": "Yes",
+        "Action": "MONITOR_CYCLE_24H.",
+        "Compliance_note": "[Vulnerability:NO], [Volatility_risk:No], [Safe Operating Solvency]"
+      },
+      "access_url": "https://centinelrisk.tech/report?id=28bd2...-3017-4..-a8d5-3ab....cd960",
+      "UUID": "28bd2.....60",
+      "expires_at": "2026-05-14T00:24:19.650Z",
+      "is_active": true
+    }
+  }
+]
 
 2. 🧠 GET_BRAIN_AUDIT (Strategic Deep-Dive)
 Cost: $8 USD.
