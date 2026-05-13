@@ -131,7 +131,7 @@ To ensure the Agent correctly identifies the requested audit type, users should 
 Must include the word "Pulse" + the Wallet Address (0x...).
 Example: "Can you run a pulse check on 0x123...?"
 
-* For Brain (Premium/Deep-Dive):
+* For Brain/Pulse (2nd Pulse day/Deep-Dive):
  Must include the Wallet addresss and Transaction Hash (64 characters).
 Example: "Run an audit on 0x0...754 and hash 0x30....bf23"
 
@@ -160,6 +160,6 @@ Ephemeral Data: Audit links can be configured to expire after a specific timefra
 
 🔗 Resources
 ---
-Official Website: centinelrisk.tech
-Developer Portal: dev.centinelrisk.tech
-Network: Built exclusively for Base.
+* Official Website: centinelrisk.tech
+* Developer Portal: dev.centinelrisk.tech
+* Network: Built exclusively for Base.
