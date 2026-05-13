@@ -28,7 +28,6 @@ pnpm add @centinel-risk-protocol/eliza-plugin-centinel
 ---
 To activate the protocol, add the following variables to your .env file. You can obtain your CENTINEL_API_KEY at dev.centinelrisk.tech.
 
-
 CENTINEL_API_KEY=cent_pending
 CENTINEL_WEBHOOK_URL=https://api.centinelrisk.tech/v..
 
@@ -39,14 +38,16 @@ Cost: 1 Free/day or $2 USD.
 Output: Immediate solvency score, HF check, and maintenance recommendations.
 Context: Used for periodic health monitoring.
 Compliance: Generates a private URL with an institutional terminal view.
- JSON
-
  
+ JSON *The access_url is ephemeral and expires in 24h for security."
+
+ <details>
+<summary><b>Click aquí para ver el JSON completo de GET_BRAIN_AUDIT</b></summary>
+  ```json
   {
-    "status": "SUCCESS",
-    "eliza_report": "🛡️ [CENTINEL PULSE CHECK]\nscore_st: 3.86 [YELLOW (Optimal Peak)] \nhealth_factor: 1.7644 |\naction_required: Yes \nrecommendation: MONITOR_CYCLE_24H.\ncompliance_note: [Vulnerability:NO], [Volatility_risk:No], [Safe Operating Solvency]\naccess_url: https://centinelrisk.tech/report?id=....0",
+    
     "full_data": {
-      "audit_id": "AUD-Pulse-324995",
+      "audit_id": "AUD-Pulse-32..5",
       "timestamp": "2026-05-13T00:24:19.627Z",
       "plan": "Pulse",
       "status": "SUCCESS",
@@ -71,9 +72,7 @@ Compliance: Generates a private URL with an institutional terminal view.
         "Compliance_note": "[Vulnerability:NO], [Volatility_risk:No], [Safe Operating Solvency]"
       },
       "access_url": "https://centinelrisk.tech/report?id=28...960",
-      "UUID": "28bd2.....60",
-      "expires_at": "2026-05-14T00:24:19.650Z",
-      "is_active": true
+      "expires_at": "2026-05-14T00:24:19.650Z"
     }
   }
 
@@ -83,21 +82,40 @@ Cost: $8 USD.
 Output: Full Stress-Test (-10% crash simulation), Long-Term (LT) risk score, and Tactical Trigger Price for de-leveraging.
 Compliance: Generates a private URL with an institutional terminal view.
 
-{
-  "audit_id": "AUD-Brain-548092",
-  "simulations": {
-    "crash_test_10pct": "HF Post-Crash: 2.99 | Impact: Low",
-    "volatility_test_20pct": "Score Proj: 1.57 | Impact: Low",
-    "vulnerability_index": "LOW (0.00%)"
-  },
-  "tactical_intel": {
-    "trigger_price": "30195.92",
-    "liquidation_price": "24484.27",
-    "order_justification": "Consolidation phase. Under-allocation risk."
-  },
-  "score_lt": "1.91",
-  "zone": "GREEN (Growth Zone)"
-}
+Strategic for automated de-leveraging Agents. Use 'trigger_price' to set safety stops.
+
+ {
+    "audit_id": "AUD-Brain-18..60",
+    "timestamp": "2026-05-13T12:41:05.745Z",
+    "plan": "BRAIN",
+    "status": "SUCCESS",
+    "wallet": "0x0a776abba....bea4b99b",
+    "system_status": "Operational",
+    "data": {
+      "health_factor": "2.1567",
+      "equity": "256855.06",
+      "btc_price": 79894
+    },
+    "risk_engine": {
+      "score_lt": "3.15",
+      "color_lt": "GREEN (Growth Zone)",
+      "maximum_drop_support": "53.63%",
+      "score_st": "2.98",
+      "color_st": "GREEN (Growth Zone)"
+    },
+    "stress_test": {
+      "crash_test_10pct": "HF Post-Crash: 1.94 | Impact: Low",
+      "volatility_test_20pct": "Score Proj: 2.98 | Impact: Low",
+      "vulnerability_index": "LOW (0.00%)"
+    },
+    "execution": {
+      "order_type": "BORROW",
+      "amount_usd": "27460.10",
+      "trigger_price": "45529.33",
+      "liquidation_price": "37044.56"
+    },
+    "compliance_note": "Order BORROW justified: Consolidation phase. Under-allocation risk. Quiet Market. Vulnerability: LOW (0.00%)."
+  }
 
 💻 Usage
 ---
