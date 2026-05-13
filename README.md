@@ -120,6 +120,9 @@ Strategic for automated de-leveraging Agents. Use 'trigger_price' to set safety 
     },
     "compliance_note": "Order BORROW justified: Consolidation phase. Under-allocation risk. Quiet Market. Vulnerability: LOW (0.00%)."
   }
+```
+
+</details>
 
 💻 Usage
 ---
