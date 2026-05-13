@@ -42,7 +42,7 @@ Compliance: Generates a private URL with an institutional terminal view.
  JSON *The access_url is ephemeral and expires in 24h for security."
 
  <details>
-<summary><b>Click aquí para ver el JSON completo de GET_BRAIN_AUDIT</b></summary>
+<summary><b>Click  for all JSON details in GET_PULSE_REPORT</b></summary>
   ```json
   {
     
@@ -84,6 +84,10 @@ Compliance: Generates a private URL with an institutional terminal view.
 
 Strategic for automated de-leveraging Agents. Use 'trigger_price' to set safety stops.
 
+<details>
+<summary><b>Click for all JSON details in GET_BRAIN_AUDIT</b></summary>
+
+```json
  {
     "audit_id": "AUD-Brain-18..60",
     "timestamp": "2026-05-13T12:41:05.745Z",
