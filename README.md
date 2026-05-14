@@ -138,11 +138,14 @@ Example: "Run an audit on 0x0...754 and hash 0x30....bf23"
 🤖 Action Definitions (For Developers)
 ---
 To ensure high accuracy, this plugin implements specific intent recognition:
-* GET_PULSE_REPORT
+** GET_PULSE_REPORT
 
-Triggers: "check pulse", "solvency audit", "is my wallet safe?", "pulse check [address]"
+* Triggers: "check pulse [address]",  "pulse check [address]"
+* Requirements: Needs a valid EVM address on base network and AAVE open position.
 
-Requirements: Needs a valid EVM address.
+** GET_BRAIN_AUDIT
+* Triggers: "brain audit [address] hash [hash]"
+* Requirements: Needs a valid EVM address on base network and AAVE open position + Transaction Hash (as Proof of Payment).
 
 💻 Usage
 ---
