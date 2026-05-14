@@ -135,6 +135,15 @@ Example: "Can you run a pulse check on 0x123...?"
  Must include the Wallet addresss and Transaction Hash (64 characters).
 Example: "Run an audit on 0x0...754 and hash 0x30....bf23"
 
+🤖 Action Definitions (For Developers)
+---
+To ensure high accuracy, this plugin implements specific intent recognition:
+* GET_PULSE_REPORT
+
+Triggers: "check pulse", "solvency audit", "is my wallet safe?", "pulse check [address]"
+
+Requirements: Needs a valid EVM address.
+
 💻 Usage
 ---
 Register the plugin in your Eliza entry point:
