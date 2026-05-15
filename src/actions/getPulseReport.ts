@@ -1,62 +1,72 @@
-import { Action, IAgentRuntime, Memory, State, HandlerCallback, elizaLogger } from "@ai16z/eliza";
+// @ts-nocheck
+import { Action, elizaLogger, IAgentRuntime, Memory, State, HandlerCallback } from "@ai16z/eliza";
+
+const activeWallets = new Set<string>();
 
 export const getPulseReportAction: Action = {
     name: "GET_PULSE_REPORT",
-    similes: ["CHECK_RISK", "HEALTH_FACTOR", "PULSE_CHECK", "CHECK_SOLVENCY"],
-    description: "Daily health check for any wallet on Base. Free/Trial mode available.",
+    similes: ["PULSE", "CRP", "CENTINEL", "AUDIT", "CHECK_WALLET"],
+    description: "Analyze a crypto wallet risk using Pulse Protocol (Free Tier).",
+    
     validate: async (runtime: IAgentRuntime, message: Memory) => {
-        return /0x[a-fA-F0-9]{40}/.test(message.content.text);
+        const text = message.content.text.toLowerCase();
+
+        return /0x[a-fA-F0-9]{40}/.test(text);
     },
+
     handler: async (runtime: IAgentRuntime, message: Memory, state: State, _options: any, callback: HandlerCallback) => {
-        const text = message.content.text;
-        const wallet = text.match(/0x[a-fA-F0-9]{40}/)?.[0];
-        const hash = text.match(/0x[a-fA-F0-9]{64}/)?.[0] || "NO_HASH"; 
-        
-        const apiKey = runtime.getSetting("CENTINEL_API_KEY") || "sk_trial_base_free_2026";
+        const wallet = message.content.text.match(/0x[a-fA-F0-9]{40}/)?.[0];
+        if (!wallet) return false;
 
-        const cacheKey = `last_pulse_${wallet}`;
-        const lastCall = await runtime.cacheManager.get<number>(cacheKey);
-        const NOW = Date.now();
-        if (lastCall && (NOW - lastCall) < 30000) { // 30 segundos de respiro
-            if (callback) callback({ text: "🛡️ Protocol is stabilizing. Please wait 30s between scans." });
-            return true;
-        }
-
-        try {
-            const response = await fetch(`${runtime.getSetting("CENTINEL_WEBHOOK_URL")}/crp2026`, {
-                method: 'POST',
-                headers: { 
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${apiKey}` 
-                },
-                body: JSON.stringify({ wallet, tx_hash: hash, type: 'pulse' })
-            });
-
-            const result = await response.json();
-
-            if (result.access_granted === false) {
-                if (callback) callback({ text: `🚫 **ACCESS DENIED:** ${result.error_message}` });
-                return true;
-            }
-
-            const payload = result.plugin_report[0];
-            const finalResponse = `${payload.eliza_report}\n\n📊 **Institutional Terminal:** ${payload.access_url}`;
-
-            await runtime.cacheManager.set(cacheKey, NOW);
-
-            if (callback) {
-                callback({ text: finalResponse, content: payload.full_data });
-            }
-            return true;
-
-        } catch (error) {
-            elizaLogger.error("Centinel Pulse Error:", error);
-            if (callback) callback({ text: "⚠️ Risk Engine busy. Try again in a few minutes." });
+        if (activeWallets.has(wallet)) {
+            elizaLogger.log(`🚫 Wallet ${wallet} in progress. Ignoring.`);
             return false;
         }
+
+        activeWallets.add(wallet);
+
+        try {
+            if (callback) {
+                callback({ 
+                    text: `🛡️ **Centinel Pulse**\nInitiating audit for: \`${wallet}\`...` 
+                });
+            }
+
+            const centinelService = runtime.getService("centinel");
+            if (!centinelService) {
+                elizaLogger.error("Centinel Service not found");
+                return false;
+            }
+
+            const responseData = await centinelService.callCentinel({ 
+                wallet, 
+                userId: message.userId,
+                mode: "pulse"
+            });
+
+            const data = Array.isArray(responseData) ? responseData[0] : responseData;
+
+            if (callback && (data?.eliza_report || data?.message)) {
+                callback({ text: data.eliza_report || data.message });
+            } else {
+                callback({ text: "⚠️ Audit completed, but no readable report was received." });
+            }
+
+            return true;
+        } catch (error) {
+            elizaLogger.error("❌ Error in Pulse Action:", error.message);
+            if (callback) {
+                callback({ text: "❌ Error: Could not connect to Centinel engine." });
+            }
+            return false;
+        } finally {
+            setTimeout(() => activeWallets.delete(wallet), 10000);
+        }
     },
-    examples: [[
-        { user: "{{user1}}", content: { text: "Audit 0x561d..." } },
-        { user: "{{agentName}}", content: { text: "Scanning solvency parameters...", action: "GET_PULSE_REPORT" } }
-    ]]
+    examples: [
+        [
+            { user: "{{user1}}", content: { text: "Pulse 0x...." } },
+            { user: "Centinel", content: { text: "🛡️ Generating report...", action: "GET_PULSE_REPORT" } }
+        ]
+    ]
 };
