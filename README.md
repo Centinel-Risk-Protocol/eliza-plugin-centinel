@@ -183,12 +183,19 @@ const runtime = new AgentRuntime({
     // ... other configuration
 });
 ```
+🧠 The "Preventive Engine"
+---
+The plugin features a basic built-in RiskEvaluator (CENTINEL_PREVENTIVE_ENGINE) that acts as a proactive financial sentinel. Unlike standard actions, this evaluator monitors context in real-time to protect the user's solvency.
 
-The "Sales Engine" in Action
-The plugin includes a built-in RiskEvaluator that detects user anxiety or high-leverage scenarios to proactively suggest audits.
+**How it works:**
+* **Automatic Detection:** Scans for keywords like liquidation, health factor, collateral, Aave or borrow.
+* **Intelligent Advisory:** When risk is detected, the agent shifts into Senior Risk Analyst mode, injecting a system advisory to guide the conversation toward safety.
+* **Direct Action:** Proactively suggests a Centinel Pulse or Brain Audit to verify solvency.
 
-User: "I'm worried about my Aave position, the market looks shaky."
-Agent: "I detect market volatility. I can run a Brain Audit ($8) to simulate a flash crash and give you a precise Trigger Price to protect your collateral. Shall we proceed?"
+**Example Interaction:**
+**User:** "I'm worried about my Aave position, the market looks shaky."
+
+**Agent (Centinel Activated):** "I'd like to offer you a Free Audit Pulse to analyze your position. I can run a Centinel Pulse check on your Base wallet right now to verify your exact liquidation risk. Please provide your address to proceed."
 
 🛡️ Security & Privacy
 ---
