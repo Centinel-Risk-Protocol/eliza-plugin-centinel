@@ -176,10 +176,11 @@ GET_BRAIN_AUDIT
 Register the plugin in your ElizaOS entry point (usually index.ts or agent.ts):
 
 ```TypeScript
-import { centinelPlugin } from "@centinel-risk/plugin-eliza";
+import { centinelPlugin } from "@centinel-risk-protocol/eliza-plugin-centinel";
+
 const runtime = new AgentRuntime({
     plugins: [centinelPlugin],
-    // ... other config
+    // ... other configuration
 });
 ```
 
