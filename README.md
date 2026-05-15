@@ -23,6 +23,35 @@ Standard DeFi agents follow static rules. **Centinel Agents follow market physic
 bash
 pnpm add @centinel-risk-protocol/eliza-plugin-centinel
 
+🔑 Authentication & Endpoints
+---
+To ensure maximum security, Centinel uses dedicated endpoints for different service tiers.
+
+| Service | Endpoint URL | API Key | Access |
+| :--- | :--- | :--- | :--- |
+| **Pulse (Free)** | `https://api.centinelrisk.tech/v1/eliza/plugin/crp2026` | `public-pulse-2026` | Public / Rate-limited |
+| **Brain/Pulse (Premium)** | `Obtained after registration` | *Your Personal Key* | [Register here](https://dev.centinelrisk.tech) |
+
+### 🛠️ How to configure your .env
+
+Copy and paste the following variables into your agent's `.env` file. Replace `your_private_key_here` with the key obtained from our developer portal.
+
+```bash
+# ========================================================
+# CENTINEL RISK PROTOCOL - CONFIGURATION
+# ========================================================
+
+bash
+# Public Endpoint for Routine Pulse Checks (Free Tier)
+CENTINEL_PULSE_URL=[https://api.centinelrisk.tech/v1/eliza/plugin/crp2026](https://api.centinelrisk.tech/v1/eliza/plugin/crp2026)
+CENTINEL_PULSE_API_KEY=public-pulse-2026
+
+# Private Endpoint for Strategic Brain Audits and second Pulse use per day (Premium Tier)
+# Register at dev.centinelrisk.tech to get your private URL and Key
+CENTINEL_BRAIN_URL=paste_url_here
+CENTINEL_BRAIN_API_KEY=your_private_key_here
+```
+
 
 🛠️ Configuration
 ---
@@ -138,12 +167,12 @@ Example: "Run an audit on 0x0...754 and hash 0x30....bf23"
 🤖 Action Definitions (For Developers)
 ---
 To ensure high accuracy, this plugin implements specific intent recognition:
-** GET_PULSE_REPORT
 
+GET_PULSE_REPORT 
 * Triggers: "check pulse [address]",  "pulse check [address]"
 * Requirements: Needs a valid EVM address on base network and AAVE open position.
 
-** GET_BRAIN_AUDIT
+GET_BRAIN_AUDIT
 * Triggers: "brain audit [address] hash [hash]"
 * Requirements: Needs a valid EVM address on base network and AAVE open position + Transaction Hash (as Proof of Payment).
 
