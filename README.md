@@ -171,16 +171,17 @@ GET_BRAIN_AUDIT
 * Triggers: "brain audit [address] hash [hash]"
 * Requirements: Needs a valid EVM address on base network and AAVE open position + Transaction Hash (as Proof of Payment).
 
-💻 Usage
+💻 Quick Start: Integration
 ---
-Register the plugin in your Eliza entry point:
+Register the plugin in your ElizaOS entry point (usually index.ts or agent.ts):
 
-TypeScript
+```TypeScript
 import { centinelPlugin } from "@centinel-risk/plugin-eliza";
 const runtime = new AgentRuntime({
     plugins: [centinelPlugin],
     // ... other config
 });
+```
 
 The "Sales Engine" in Action
 The plugin includes a built-in RiskEvaluator that detects user anxiety or high-leverage scenarios to proactively suggest audits.
