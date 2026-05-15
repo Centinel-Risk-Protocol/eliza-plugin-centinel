@@ -203,12 +203,12 @@ The plugin features a basic built-in RiskEvaluator (CENTINEL_PREVENTIVE_ENGINE) 
 
 🛡️ Security & Privacy
 ---
-Non-Custodial: Centinel never asks for private keys. Only public wallet addresses.
-Encrypted Payloads: All communication is secured via HTTPS and Bearer Token Auth.
-Ephemeral Data: Audit links can be configured to expire after a specific timeframe.
+* **Non-Custodial:** Centinel never asks for private keys. Only public wallet addresses.
+* **Encrypted Payloads:** All communication is secured via HTTPS and Bearer Token Auth.
+* **Ephemeral Data:** Audit links can be configured to expire after a specific timeframe.
 
 🔗 Resources
 ---
-* Official Website: centinelrisk.tech
-* Developer Portal: dev.centinelrisk.tech
-* Network: Built exclusively for Base/AAVE.
+*   **Official Website:** [centinelrisk.tech](https://centinelrisk.tech)
+*   **Developer Portal:** [dev.centinelrisk.tech](https://dev.centinelrisk.tech)
+*   **Network:** Built exclusively for [Base](https://base.org) / [AAVE](https://aave.com).
