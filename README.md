@@ -55,11 +55,6 @@ CENTINEL_BRAIN_API_KEY=your_private_key_here
 
 🛠️ Configuration
 ---
-To activate the protocol, add the following variables to your .env file. You can obtain your CENTINEL_API_KEY at dev.centinelrisk.tech.
-
-CENTINEL_API_KEY=cent_pending
-CENTINEL_WEBHOOK_URL=https://api.centinelrisk.tech/v..
-
 📦 Core Actions
 
 1.🛡️ GET_PULSE_REPORT (Routine Check)
