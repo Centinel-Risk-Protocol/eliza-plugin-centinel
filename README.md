@@ -1,4 +1,8 @@
 # 🛡️ @centinel-risk-protocol/eliza-plugin-centinel
+![NPM Version](https://img.shields.io/npm/v/@centinel-risk-protocol/eliza-plugin-centinel)
+![License](https://img.shields.io/npm/l/@centinel-risk-protocol/eliza-plugin-centinel)
+![Base Network](https://img.shields.io/badge/Network-Base-blue)
+
 ---
 
 > **The "Safety Switch" for Autonomous Agents on Base Network.**
@@ -41,7 +45,7 @@ Copy and paste the following variables into your agent's `.env` file. Replace `y
 # CENTINEL RISK PROTOCOL - CONFIGURATION
 # ========================================================
 
-bash
+
 # Public Endpoint for Routine Pulse Checks (Free Tier)
 CENTINEL_PULSE_URL=[https://api.centinelrisk.tech/v1/eliza/plugin/crp2026](https://api.centinelrisk.tech/v1/eliza/plugin/crp2026)
 CENTINEL_PULSE_API_KEY=public-pulse-2026
