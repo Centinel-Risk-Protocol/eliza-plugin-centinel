@@ -1,26 +1,24 @@
 {
   "name": "@centinel-risk-protocol/eliza-plugin-centinel",
   "version": "1.0.0",
-  "description": "Risk Intelligence & Solvency Layer for Eliza agents on Base Network",
-  "main": "dist/index.js",
+  "description": "Centinel Risk Protocol integration for ElizaOS",
   "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts",
-    "dev": "tsup src/index.ts --format cjs,esm --watch --dts",
-    "lint": "eslint \"src/**/*.ts\""
-  },
-  "dependencies": {
-    "zod": "^3.23.8",
-    "bignumber.js": "^9.1.2"
-  },
-  "peerDependencies": {
-    "@ai16z/eliza": ">=0.1.0"
-  },
-  "devDependencies": {
-    "tsup": "^8.0.0",
-    "typescript": "^5.0.0",
-    "@types/node": "^20.0.0"
+    "build": "tsup src/index.ts --format esm --dts",
+    "dev": "tsup src/index.ts --format esm --watch --dts",
+    "prepare": "npm run build"
   },
   "publishConfig": {
     "access": "public"
@@ -36,5 +34,17 @@
     "agent"
   ],
   "author": "Centinel Risk Protocol",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "zod": "3.23.3",
+    "bignumber.js": "^9.1.2"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "latest",
+    "@ai16z/eliza": "0.1.6-alpha.4"
+  },
+  "peerDependencies": {
+    "@ai16z/eliza": "0.1.6-alpha.4"
+  }
 }
