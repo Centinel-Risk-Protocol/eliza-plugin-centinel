@@ -48,7 +48,7 @@ Copy and paste the following variables into your agent's `.env` file. Replace `y
 
 # Public Endpoint for Routine Pulse Checks (Free Tier)
 CENTINEL_PULSE_URL=https://api.centinelrisk.tech/v1/eliza/plugin/crp2026
-CENTINEL_PULSE_API_KEY=public-pulse-2026
+CENTINEL_PULSE_API_KEY=Centinel_Internal_OZ_98s
 
 # Private Endpoint for Strategic Brain Audits and second Pulse use per day (Premium Tier)
 # Register at dev.centinelrisk.tech to get your private URL and Key
