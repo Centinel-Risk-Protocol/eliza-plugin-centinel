@@ -33,7 +33,7 @@ To ensure maximum security, Centinel uses dedicated endpoints for different serv
 
 | Service | Endpoint URL | API Key | Access |
 | :--- | :--- | :--- | :--- |
-| **Pulse (Free)** | `https://api.centinelrisk.tech/v1/eliza/plugin/crp2026` | `public-pulse-2026` | Public / Rate-limited |
+| **Pulse (Free)** | `https://api.centinelrisk.tech/v1/eliza/plugin/crp2026` | `Centinel_Internal_OZ_98s` | Public / Rate-limited |
 | **Brain/Pulse (Premium)** | `Obtained after registration` | *Your Personal Key* | [Register here](https://dev.centinelrisk.tech) |
 
 ### 🛠️ How to configure your .env
