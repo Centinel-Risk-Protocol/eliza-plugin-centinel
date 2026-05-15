@@ -164,7 +164,7 @@ Example: "Can you run a pulse check on 0x123...?"
  Must include the Wallet addresss and Transaction Hash (64 characters).
 Example: "Run an audit on 0x0...754 and hash 0x30....bf23"
 
-🤖 Action Definitions (For Developers)
+🤖 Action Definitions
 ---
 To ensure high accuracy, this plugin implements specific intent recognition:
 
