@@ -1,72 +1,91 @@
+// @ts-nocheck
 import { Action, IAgentRuntime, Memory, State, HandlerCallback, elizaLogger } from "@ai16z/eliza";
+
+const BRAIN_COOLDOWN_MS = 5 * 60 * 1000; 
 
 export const getBrainAuditAction: Action = {
     name: "GET_BRAIN_AUDIT",
-    similes: ["BRAIN_SCAN", "STRESS_TEST", "FULL_AUDIT", "GET_TRIGGER_PRICE"],
-    description: "Deep solvency analysis. Requires sk_live or $8 verification.",
+    similes: ["BRAIN_SCAN", "DEEP_AUDIT", "VERIFY_PAYMENT", "AUDIT_HASH"],
+    description: "Triggers deep brain audit. Requires Wallet and TX Hash.",
+    
     validate: async (runtime: IAgentRuntime, message: Memory) => {
-        return /0x[a-fA-F0-9]{40}/.test(message.content.text);
+        const text = message.content.text.toLowerCase();
+        return /0x[a-fA-F0-9]{64}/.test(text) || /0x[a-fA-F0-9]{40}/.test(text);
     },
+
     handler: async (runtime: IAgentRuntime, message: Memory, state?: State, _options?: any, callback?: HandlerCallback): Promise<boolean> => {
         const text = message.content.text;
-        const wallet = text.match(/0x[a-fA-F0-9]{40}/)?.[0];
-        const hash = text.match(/0x[a-fA-F0-9]{64}/)?.[0] || "NO_HASH";
-        const apiKey = runtime.getSetting("CENTINEL_API_KEY") || "sk_trial_base_free_2026";
+        const userId = message.userId;
+        
+        const hash = text.match(/0x[a-fA-F0-9]{64}/)?.[0];
+        let wallet = text.match(/0x[a-fA-F0-9]{40}/)?.[0];
 
-        const cacheKey = `last_brain_${wallet}`;
-        const lastCall = await runtime.cacheManager.get<number>(cacheKey);
-        const NOW = Date.now();
-        if (lastCall && (NOW - lastCall) < 60000) {
-            if (callback) callback({ text: "🧠 Brain Engine is recalibrating. Please wait 60s between deep audits." });
-            return true;
+        const cache = runtime?.cacheManager;
+        const cacheKey = `centinel:cooldown:${userId}`;
+        const draftKey = `centinel:draft:${userId}`;
+
+        try {
+            if (cache && typeof cache.get === 'function') {
+                // Check Cooldown
+                const lastRun = await cache.get(cacheKey);
+                if (lastRun && Date.now() - Number(lastRun) < BRAIN_COOLDOWN_MS) {
+                    const remaining = Math.ceil((BRAIN_COOLDOWN_MS - (Date.now() - Number(lastRun))) / 60000);
+                    callback?.({ text: `⏳ **COOLDOWN:** **${remaining} min** remaining.` });
+                    return true;
+                }
+                if (!wallet) {
+                    const draft = await cache.get(draftKey);
+                    if (draft?.wallet) wallet = draft.wallet;
+                }
+            }
+        } catch (e) {
+            elizaLogger.warn("[CENTINEL_BRAIN] Cache bypass due to error:", e.message);
         }
 
-        if (apiKey.startsWith("sk_trial") && hash === "NO_HASH") {
-            if (callback) {
-                callback({
-                    text: `🧠 **BRAIN UPGRADE REQUIRED:** Deep audit requires an sk_live key.
-                    \n1. Get yours at dev.centinelrisk.tech
-                    \n2. Or provide a $8 Tx Hash for a single report.`,
-                    content: { status: "UPGRADE_REQUIRED" }
-                });
+        if (!hash || !wallet) {
+            if (wallet && !hash) {
+                // Intentar guardar borrador
+                if (cache?.set) await cache.set(draftKey, { wallet }, { expires: Date.now() + 600000 }).catch(()=>{});
+                callback?.({ text: "🧠 **Registered wallet. Now paste the **TX Hash** for auditing." });
+            } else if (hash && !wallet) {
+                callback?.({ text: "❌ HASH DETECTED, BUT **Wallet address** is required." });
+            } else {
+                callback?.({ text: "❌ Provide Wallet & Hash to do the CENTINEL Audit." });
             }
-            return true;
+            return false;
         }
 
         try {
-            const response = await fetch(`${runtime.getSetting("CENTINEL_WEBHOOK_URL")}/crp2026`, {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${apiKey}`
-                },
-                body: JSON.stringify({ wallet, tx_hash: hash, type: 'brain' })
+            callback?.({ text: "**CENTINEL_ENGINE:** Running deep audit..." });
+
+            const centinelService = runtime.getService("centinel"); 
+            if (!centinelService || typeof centinelService.callCentinel !== 'function') {
+                throw new Error("CENTINEL_SERVICE_NOT_READY");
+            }
+
+            const responseData = await centinelService.callCentinel({
+                tx_hash: hash,
+                wallet: wallet,
+                mode: "brain",
+                discord_id: userId
             });
 
-            const result = await response.json();
-
-            if (result.access_granted === false) {
-                if (callback) callback({ text: `🚫 **CENTINEL ERROR:** ${result.error_message}` });
-                return true;
+            if (cache?.set) {
+                await cache.set(cacheKey, Date.now().toString()).catch(()=>{});
+                await cache.delete(draftKey).catch(()=>{});
             }
 
-            const payload = result.plugin_report[0];
-            const finalResponse = `${payload.eliza_report}\n\n🏛️ **Bloomberg Terminal Audit:** ${payload.access_url}`;
-
-            await runtime.cacheManager.set(cacheKey, NOW);
-
-            if (callback) {
-                callback({ text: finalResponse, content: payload.full_data });
-            }
+            const data = Array.isArray(responseData) ? responseData[0] : responseData;
+            const report = data?.eliza_report || data?.message || "✅ Send audit.";
+            
+            callback?.({ text: report });
             return true;
+
         } catch (error) {
-            elizaLogger.error("Centinel Brain Error:", error);
-            if (callback) callback({ text: "⚠️ Simulation engine offline. Try again later." });
+            elizaLogger.error("[CENTINEL_BRAIN] Handler Error:", error.message);
+            callback?.({ text: "⚠️ **SYSTEM_FAILURE:** Error connecting to the risk motor. Verify that agents are active" });
             return false;
         }
     },
-    examples: [[
-        { user: "{{user1}}", content: { text: "Run a deep brain audit on 0x8ea6..." } },
-        { user: "{{agentName}}", content: { text: "Simulating market shocks and trigger prices...", action: "GET_BRAIN_AUDIT" } }
-    ]]
+    examples: [] 
 };
