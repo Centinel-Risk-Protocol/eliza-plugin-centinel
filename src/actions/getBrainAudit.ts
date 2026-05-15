@@ -67,7 +67,7 @@ export const getBrainAuditAction: Action = {
                 tx_hash: hash,
                 wallet: wallet,
                 mode: "brain",
-                discord_id: userId
+                userId: message.userId,
             });
 
             if (cache?.set) {
