@@ -61,7 +61,8 @@ CENTINEL_BRAIN_API_KEY=your_private_key_here
 ---
 📦 Core Actions
 
-1.🛡️ GET_PULSE_REPORT (Routine Check)
+**1.🛡️ GET_PULSE_REPORT (Routine Check)**
+
 *  Cost: One Free per day or $2 USD (Second use per day).
 *  Output: Immediate solvency score, Health Factor (HF) check, and maintenance recommendations.
 *  Security Note: Generates a private URL with an institutional terminal view. The access_url is ephemeral and expires in 24h.
@@ -105,9 +106,10 @@ CENTINEL_BRAIN_API_KEY=your_private_key_here
 
 </details>
 
-2. 🧠 GET_BRAIN_AUDIT (Strategic Deep-Dive)
+**2. 🧠 GET_BRAIN_AUDIT (Strategic Deep-Dive)**
+
 * Cost: $8 USD.
-* Output: Full Stress-Test (-10% crash simulation), Long-Term (LT) risk score, and Tactical Trigger Price for de-leveraging.
+* Output: Strategy Reallocate Position module, designed to minimize exposure through precise adjustment vectors for repay and borrow operations. The system delivers a Full Stress-Test (-10% crash simulation), Long-Term (LT) risk score, and Tactical Trigger Price for de-leveraging.
 * Compliance: Generates a private URL with an institutional terminal view.
 
 Strategic for automated de-leveraging Agents. Use 'trigger_price' to set safety stops.
@@ -155,6 +157,7 @@ Strategic for automated de-leveraging Agents. Use 'trigger_price' to set safety 
 🕹️ How to Trigger (Usage Instructions)
 ---
 To ensure the Agent correctly identifies the requested audit type, users should follow these patterns:
+
 * For Pulse (Free/Routine):
 Must include the word "Pulse" + the Wallet Address (0x...).
 Example: "Can you run a pulse check on 0x123...?"
@@ -167,13 +170,13 @@ Example: "Run an audit on 0x0...754 and hash 0x30....bf23"
 ---
 To ensure high accuracy, this plugin implements specific intent recognition:
 
-GET_PULSE_REPORT 
+**GET_PULSE_REPORT**
 * Triggers: "check pulse [address]",  "pulse check [address]"
-* Requirements: Needs a valid EVM address on base network and AAVE open position.
+* Requirements: A valid EVM address on base network and AAVE open position.
 
-GET_BRAIN_AUDIT
+**GET_BRAIN_AUDIT**
 * Triggers: "brain audit [address] hash [hash]"
-* Requirements: Needs a valid EVM address on base network and AAVE open position + Transaction Hash (as Proof of Payment).
+* Requirements: A valid EVM address on base network and AAVE open position + Transaction Hash (as Proof of Payment).
 
 💻 Quick Start: Integration
 ---
