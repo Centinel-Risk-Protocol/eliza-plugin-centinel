@@ -149,7 +149,11 @@ Strategic for automated de-leveraging Agents. Use 'trigger_price' to set safety 
       "liquidation_price": "37044.56"
     },
     "compliance_note": "Order BORROW justified: Consolidation phase. Under-allocation risk. Quiet Market. Vulnerability: LOW (0.00%)."
+    },
+    "access_url": "https://centinelrisk.tech/report?id=28...960",
+    "expires_at": "2026-05-14T00:24:19.650Z"
   }
+}
 ```
 
 </details>
