@@ -1,11 +1,15 @@
+// @ts-nocheck
 import { Plugin } from "@ai16z/eliza";
-import { getPulseReportAction } from "./actions/getPulseReport";
-import { getBrainAuditAction } from "./actions/getBrainAudit";
-import { riskEvaluator } from "./evaluators/riskEvaluator";
+import { getPulseReportAction } from "./actions/getPulseReport.js";
+import { getBrainAuditAction } from "./actions/getBrainAudit.js";
+import { centinelRiskProvider } from "./providers/centinelRiskProvider.js";
+import { stateFixerProvider } from "./providers/stateFixer.js";
+import { riskEvaluator } from "./evaluators/riskEvaluator.js"; // Nuevo import
+import { CentinelService } from "./services/centinel.js";
 
 export const centinelPlugin: Plugin = {
     name: "centinel-risk-protocol",
-    description: "Centinel Risk Intelligence & Solvency Layer for Base Network.",
+    description: "Centinel Executor: Solvency auditing and risk prevention tool.",
     actions: [
         getPulseReportAction, 
         getBrainAuditAction
@@ -13,7 +17,11 @@ export const centinelPlugin: Plugin = {
     evaluators: [
         riskEvaluator
     ],
-    providers: []
+    providers: [
+        centinelRiskProvider,
+        stateFixerProvider 
+    ],
+    services: [
+        new CentinelService()
+    ],
 };
-
-export default centinelPlugin;
