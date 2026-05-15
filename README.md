@@ -58,7 +58,7 @@ CENTINEL_BRAIN_API_KEY=your_private_key_here
 📦 Core Actions
 
 1.🛡️ GET_PULSE_REPORT (Routine Check)
-*  Cost: One Free/day or $2 USD.
+*  Cost: One Free per day or $2 USD (Second use per day).
 *  Output: Immediate solvency score, Health Factor (HF) check, and maintenance recommendations.
 *  Security Note: Generates a private URL with an institutional terminal view. The access_url is ephemeral and expires in 24h.
  
