@@ -33,7 +33,7 @@ To ensure maximum security, Centinel uses dedicated endpoints for different serv
 
 | Service | Endpoint URL | API Key | Access |
 | :--- | :--- | :--- | :--- |
-| **Pulse (Free)** | `https://api.centinelrisk.tech/v1/eliza/plugin/crp2026` | `Centinel_Internal_OZ_98s` | Public / Rate-limited |
+| **Pulse (Free)** | `See .env configuration` | `CENTINEL_PUBLIC_API_KEY` | Public / Rate-limited |
 | **Brain/Pulse (Premium)** | `Obtained after registration` | *Your Personal Key* | [Register here](https://dev.centinelrisk.tech) |
 
 ### 🛠️ How to configure your .env
@@ -47,12 +47,13 @@ Copy and paste the following variables into your agent's `.env` file. Replace `y
 
 
 # Public Endpoint for Routine Pulse Checks (Free Tier)
-CENTINEL_PULSE_URL=https://api.centinelrisk.tech/v1/eliza/plugin/crp2026
+CENTINEL_API_URL=https://api.centinelrisk.tech/v1/eliza/plugin/crp2026
+
+# Public Key for Routine Free Checks
 CENTINEL_PUBLIC_API_KEY=Centinel_Internal_OZ_98s
 
 # Private Endpoint for Strategic Brain Audits and second Pulse use per day (Premium Tier)
 # Register at dev.centinelrisk.tech to get your private URL and Key
-CENTINEL_BRAIN_URL=paste_url_here
 CENTINEL_PRIVATE_API_KEY=your_private_key_here
 ```
 
@@ -165,7 +166,7 @@ Must include the word "Pulse" + the Wallet Address (0x...).
 Example: "Can you run a pulse check on 0x123...?"
 
 * For Brain/Pulse (2nd Pulse day/Deep-Dive):
- Must include the Wallet addresss and Transaction Hash (64 characters).
+ Must include the Wallet address and Transaction Hash (64 characters).
 Example: "Run an audit on 0x0...754 and hash 0x30....bf23"
 
 🤖 Action Definitions

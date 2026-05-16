@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Service, IAgentRuntime, ServiceType } from "@ai16z/eliza";
+import { Service, IAgentRuntime, ServiceType, elizaLogger } from "@ai16z/eliza";
 
 export class CentinelService extends Service {
     static serviceType: ServiceType = "centinel" as unknown as ServiceType;
@@ -15,20 +15,18 @@ export class CentinelService extends Service {
         try {
             const mode = payload.mode || "pulse";
 
-            const pulseUrl = this.runtime.getSetting("CENTINEL_PULSE_URL");
-            const brainUrl = this.runtime.getSetting("CENTINEL_BRAIN_URL");
+            const apiUrl = this.runtime.getSetting("CENTINEL_API_URL");
             const publicApiKey = this.runtime.getSetting("CENTINEL_PUBLIC_API_KEY"); 
             const privateApiKey = this.runtime.getSetting("CENTINEL_PRIVATE_API_KEY");
 
-            const targetUrl = mode === "brain" ? brainUrl : pulseUrl;
-            const targetKey = mode === "brain" ? privateApiKey : publicApiKey;
+            const targetKey = mode === "brain" ? (privateApiKey || publicApiKey) : publicApiKey;
 
-            if (!targetUrl) {
-                console.error(`🚨 URL for mode ${mode} not configured.`);
+            if (!apiUrl) {
+                console.error(`🚨 CENTINEL_API_URL is not configured in .env`);
                 return { message: "Incomplete server configuration" };
             }
 
-            const response = await fetch(targetUrl, {
+            const response = await globalThis.fetch(apiUrl, {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json", 
@@ -42,8 +40,8 @@ export class CentinelService extends Service {
             }
 
             return await response.json();
-        } catch (error) {
-            console.error("🚨 CentinelService connection failure:", error.message);
+        } catch (error: any) {
+           elizaLogger.error("🚨 CentinelService connection failure:", error?.message || error);
             return { message: "Connection error" };
         }
     }

@@ -1,6 +1,6 @@
 {
   "name": "@centinel-risk-protocol/eliza-plugin-centinel",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Centinel Risk Protocol integration for ElizaOS",
   "type": "module",
   "main": "dist/index.js",
